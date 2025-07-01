@@ -1,108 +1,107 @@
 # spreadrank
-Problem & Motivation
-Estimate how diverse a list of categories is—e.g., genres in a playlist, tags in a dataset—without complex stats.
+# SpreadRank
 
-Many diversity measures (entropy, Gini) are hard to interpret or compute. We want something simple, intuitive, and college-student-friendly.
+Compute a SpreadRank score for a list of categorical items.  
+Score ∈ [0, 1):  
+- 0 means perfectly uniform distribution  
+- Values approach 1 as one category dominates  
 
-Core Insight: "SpreadRank"
-Input: List of categorical items  
-Goal: Score how spread out the frequencies are
+---
 
-Steps:
-1. Count occurrences of each category.
-2. Sort frequencies in descending order.
-3. For each adjacent pair ((f_i, f_{i+1})), compute drop:
-   Drop_i ={f_i - f_{i+1}}/{f_i}
-4. Average the drops → SpreadRank Score
+## Prerequisites
 
-Score ranges from 0 (uniform distribution) to near 1 (dominant category).
+- Python 3.6 or higher  
 
+---
 
+## Installation
 
-Novelty
-Instead of entropy, SpreadRank captures *sequential decline* in frequencies. It reveals imbalance patterns with basic arithmetic—no logs or probabilities needed.
-
-Time Complexity:
-- Counting: O(n)  
-- Sorting: O(k log k) (k = unique categories)
-
-Space: O(k)
-
-Validation Plan
-- Test on:
-  - Uniform data → Score ≈ 0
-  - One-category-dominant → Score ≈ 1
-  - Small / edge-case lists
-- Compare runtime vs. entropy on random datasets
+Clone the repository and (optionally) set up a virtual environment:
 
 
+git clone https://github.com/yourusername/spreadrank.git
+cd spreadrank
 
-Algorithms – Final Project Progress Check
+# optional: create venv
+python3 -m venv venv
+source venv/bin/activate
 
-SpreadRank: An Intuitive Diversity Metric  
-We implement **SpreadRank** to quantify category imbalance via sequential frequency drops—no logs or probabilities required.
-
-Implementation Snapshot  
-def spread_rank(items):
-    from collections import Counter
-    freqs = sorted(Counter(items).values(), reverse=True)
-    drops = [(f - freqs[i+1]) / f for i, f in enumerate(freqs[:-1])]
-    return sum(drops) / len(drops) if drops else 0.0
+# no external dependencies required
 
 
-Core Pseudocode  
-1. Count each category → freq list
-2. Sort freqs descending
-3. For each adjacent pair (f_i, f_{i+1}):
-     compute drop_i = (f_i - f_{i+1}) / f_i
-4. Score = avg(all drop_i)
+---
+
+## Usage
+
+Run `main.py` in one of four modes:
+
+1. **List mode**  
+   Pass items directly as space-separated arguments:  
+   
+   python main.py --list a a b b c
+ 
+
+2. **File mode**  
+   Read one item per line from a text file:  
+   
+   python main.py --file items.txt
+   
+
+3. **STDIN mode**  
+   Pipe items (one per line) via standard input:  
+   
+   cat items.txt | python main.py --stdin
 
 
-Early Validation  
+4. **Interactive mode**  
+   Run without flags and enter items when prompted:  
+   
+   python main.py
+   # Enter items separated by spaces: a a b c
+   
 
-Test Case                      Expected                      Actual
-[A,A,A,B,B,C]                   0.4167                       0.4167 
-Compute adjacent drops
+---
 
-drop₁ = (f₁ – f₂) / f₁ = (3 – 2) / 3 = 1/3 ≈ 0.3333 drop₂ = (f₂ – f₃) / f₂ = (2 – 1) / 2 = 1/2 = 0.5
+## Command-Line Arguments
 
-Average the drops
+- `-l, --list`  
+  Items specified inline, e.g. `-l red red blue green red`  
 
-SpreadRank = (drop₁ + drop₂) / (number of drops) = (1/3 + 1/2) / 2 = (2/6 + 3/6) / 2 = (5/6) / 2 = 5/12 ≈ 0.4167
+- `-f, --file`  
+  Path to a text file with one item per line  
 
-[X,Y,Z] (uniform)                0.0                          0.0
+- `-s, --stdin`  
+  Read items from standard input (one per line)  
 
-[1,1,1,1] (dominant)             1.0                          1.0     
-     
+---
 
-
-
-Preliminary Runtime & Memory  
-- Time: O(n) to count + O(k log k) to sort (n = items, k = unique)  
-- Space: O(k) for frequency storage  
+## Examples
 
 
+# 1) Inline list
+python main.py --list apple apple banana cherry
 
-Next Steps
+# 2) From file
+python main.py --file items.txt
 
-1. Benchmarking:
-   - Compare SpreadRank vs. entropy/Gini on large, real-world tag and genre datasets (n > 1M).  
-   - Measure runtime and memory with varying k and skew.  
+# 3) Via STDIN
+cat items.txt | python main.py --stdin
 
-2. Robustness Tests:  
-   - Edge cases: empty lists, single-category, heavy-tailed distributions.  
-   - Sensitivity analysis: how score changes under small perturbations.  
+# 4) Interactive prompt
+python main.py
+Enter items separated by spaces: x x y z z z
 
-3. Usability & Integration:  
-   - Package as a standalone Python module with optional Cython speed-ups.  
-   - Provide visualization utilities for drop sequences.  
 
-4. Extended Variants:  
-   - Weight-adjusted SpreadRank (e.g., penalize early large drops more).  
-   - Multi-dimensional extension for joint categorical features.  
+Each command prints:
 
-5. Documentation & Paper Draft:  
-   - Finalize methodology write-up.  
-   - Prepare slides and demo for project presentation.
 
+SpreadRank score: 0.XXXXXX
+
+
+---
+
+## Project Structure
+
+- src/       – Contains `spread_rank`, argument parsing, and interactive fallback  
+- README.md     – This documentation  
 
