@@ -19,7 +19,7 @@ Score ∈ [0, 1):
 Clone the repository and (optionally) set up a virtual environment:
 
 
-git clone https://github.com/yourusername/spreadrank.git
+git clone https://github.com/APBakari/spreadrank.git
 cd spreadrank
 
 # optional: create venv
