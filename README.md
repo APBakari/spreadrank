@@ -1,5 +1,4 @@
 # spreadrank
-# SpreadRank
 
 Compute a SpreadRank score for a list of categorical items.  
 Score ∈ [0, 1):  
