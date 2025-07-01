@@ -2,6 +2,16 @@ from collections import Counter       # import Counter to count occurrences of e
 from typing import List, Hashable    # import type hints for function signatures
 import argparse                       # import argparse for command-line argument parsing
 import sys                            # import sys for stdin reading and exiting
+import pytest
+from main import spread_rank
+
+@pytest.mark.parametrize("items, expected", [
+    ([], 0.0),
+    (["a"], 0.0),
+    (["a","b","c","d"], 0.0),
+    (["a","a","a","b"], (3-1)/3),
+    (["x"]*100 + ["y"], (100-1)/100),
+])
 
 def spread_rank(items: List[Hashable]) -> float:  # define function taking a list of hashable items
     """
