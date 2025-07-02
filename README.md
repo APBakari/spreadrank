@@ -21,6 +21,9 @@ Clone the repository and (optionally) set up a virtual environment:
 git clone https://github.com/APBakari/spreadrank.git
 cd spreadrank
 
+Can also use codespace 
+name: The Spread
+
 # optional: create venv
 python3 -m venv venv
 source venv/bin/activate
